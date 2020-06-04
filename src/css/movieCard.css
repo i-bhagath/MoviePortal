@@ -1,0 +1,9 @@
+/* body{
+  background-color: black;
+} */
+.movieCard {
+  height: auto;
+  width: 400px;
+  border: 1px black solid;
+  background-color: antiquewhite;
+}
