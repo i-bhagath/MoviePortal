@@ -4,7 +4,7 @@ import "./index.css";
 import * as serviceWorker from "./serviceWorker";
 import MovieSearch from "./Components/MovieSearch";
 import configureStore from './Redux/configureStore';
-import {Provider as ReduxProvider} from 'react-redux';
+//import {Provider as ReduxProvider} from 'react-redux';
 
 
 const store = configureStore();
