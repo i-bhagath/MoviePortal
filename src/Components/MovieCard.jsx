@@ -26,7 +26,7 @@ const MovieCard = ({ movieInfo }) => {
   return (
     <div className="d-flex flex-column movieCard m-4">
       <div className="d-flex justify-content-center">
-        <img className="p-1" src={img}></img>
+        <img className="p-1" src={img} alt=""></img>
       </div>
       <div className="d-flex flex-column">
         <h5 className="d-flex justify-content-center font-weight-bold">
