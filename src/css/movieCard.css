@@ -6,4 +6,6 @@
   width: 400px;
   border: 1px black solid;
   background-color: antiquewhite;
+  border-radius: 5px;
+  box-shadow: 0 0 5px black;
 }

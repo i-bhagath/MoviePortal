@@ -3,6 +3,8 @@ import SearchBox from "./SearchBox";
 import { searchMovie } from "../api/tmdbApi";
 import MovieList from "./MovieList";
 import MoviePortalHeader from "./MovieHeader";
+import _ from "lodash";
+
 class MovieSearch extends Component {
   state = {
     searchValue: "",
@@ -12,8 +14,16 @@ class MovieSearch extends Component {
   handleSubmit = async (event) => {
     event.preventDefault();
     const searchList = await searchMovie(this.state.searchValue);
-    this.setState({ searchList });
-    console.log(searchList);
+    const updatedSearchList = searchList.map((movie) => {
+      const movieyear = movie.release_date
+        ? movie.release_date.substring(0, 4)
+        : "";
+      return { ...movie, movieyear: movieyear };
+    });
+    const sortedList = _.orderBy(updatedSearchList, ["movieyear"], ["desc"]);
+    console.log(updatedSearchList);
+    console.log(sortedList);
+    this.setState({ searchList: sortedList});
   };
 
   handleChange = (event) => {
