@@ -3,6 +3,7 @@ import SearchBox from "./SearchBox";
 import { searchMovie } from "../api/tmdbApi";
 import MovieList from "./MovieList";
 import MoviePortalHeader from "./MovieHeader";
+import { connect } from "react-redux";
 import _ from "lodash";
 
 class MovieSearch extends Component {
@@ -21,9 +22,7 @@ class MovieSearch extends Component {
       return { ...movie, movieyear: movieyear };
     });
     const sortedList = _.orderBy(updatedSearchList, ["movieyear"], ["desc"]);
-    console.log(updatedSearchList);
-    console.log(sortedList);
-    this.setState({ searchList: sortedList});
+    this.setState({ searchList: sortedList });
   };
 
   handleChange = (event) => {
@@ -41,10 +40,22 @@ class MovieSearch extends Component {
           searchValue={this.state.searchValue}
         ></SearchBox>
         <hr className="my-4"></hr>
+        {this.props.movies.length>0 && 
+          <div className="movieCount d-flex justify-content-center align-items-center">
+            {this.props.movies.length}
+          </div>
+         
+        }
         <MovieList List={this.state.searchList}></MovieList>
       </>
     );
   }
 }
 
-export default MovieSearch;
+const mapStateToProps = (state) => {
+  return {
+    movies: state.wishListMovies,
+  };
+};
+
+export default connect(mapStateToProps)(MovieSearch);

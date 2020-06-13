@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import { connect } from "react-redux";
+import * as wishList from "../Redux/Actions/wishlistAction";
 
-const MovieCard = ({ movieInfo }) => {
+const MovieCard = ({ movieInfo, ...props }) => {
   const [isInWatchList, setWatchList] = useState(false);
   const [watchListCss, setWatchListCss] = useState("btn btn-success");
   const [innerTextForWatchList, setInnerTextForWatchList] = useState(
@@ -13,7 +15,6 @@ const MovieCard = ({ movieInfo }) => {
   const releaseDate = movieInfo.release_date;
   const handleClick = (event) => {
     console.log(isInWatchList);
-    setWatchList(!isInWatchList);
     console.log(isInWatchList);
     if (isInWatchList) {
       setWatchListCss("btn btn-success");
@@ -22,6 +23,14 @@ const MovieCard = ({ movieInfo }) => {
       setWatchListCss("btn btn-danger");
       setInnerTextForWatchList("Remove from WatchList");
     }
+    if (!isInWatchList) {
+      debugger;
+      props.dispatch(wishList.AddToWishlist(movieInfo));
+    } else {
+      debugger;
+      props.dispatch(wishList.RemoveFromWishlist(movieInfo));
+    }
+    setWatchList(!isInWatchList);
   };
   return (
     <div className="d-flex flex-column movieCard m-4">
@@ -43,4 +52,10 @@ const MovieCard = ({ movieInfo }) => {
   );
 };
 
-export default MovieCard;
+const mapStateToProps = (state) => {
+  return {
+    movies: state.movies,
+  };
+};
+
+export default connect(mapStateToProps)(MovieCard);
