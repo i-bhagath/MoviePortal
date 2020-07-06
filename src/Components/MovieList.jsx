@@ -1,13 +1,14 @@
 import React from "react";
-import MovieCard from "./MovieCard";
+import MovieCardHolder from "./MovieCardHolder";
 import "../css/movieCard.css";
 
 const MovieList = ({ List }) => {
+  //debugger;
   return (
     <div className="d-flex flex-wrap justify-content-around">
       {List.length > 0 &&
         List.map((movie, i) => (
-          <MovieCard key={i} movieInfo={movie}></MovieCard>
+          <MovieCardHolder key={movie.id} movieInfo={movie}></MovieCardHolder>
         ))}
     </div>
   );

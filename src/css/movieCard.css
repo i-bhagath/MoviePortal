@@ -15,8 +15,8 @@
   width: 75px;
   border-radius: 50%;
   border: 1px solid black;
-  position: sticky;
-  top: 30px;
+  position: fixed;
+  top: 150px;
   font-weight: bolder;
   background-color: green;
   color: white;

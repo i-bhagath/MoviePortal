@@ -10,19 +10,73 @@ class MovieSearch extends Component {
   state = {
     searchValue: "",
     searchList: [],
+    movieListFromAPI: [],
+    watchList:[]
   };
+
+  componentWillReceiveProps(props) {
+    debugger;
+    const watchList = props.watchListMovies;
+    this.createMovieList(watchList);
+  }
 
   handleSubmit = async (event) => {
     event.preventDefault();
-    const searchList = await searchMovie(this.state.searchValue);
+    await this.getMoviesFromAPI();
+    await this.createMovieList(this.state.watchList);
+  };
+
+  getMoviesFromAPI = async () => {
+    const movieListFromAPI = await searchMovie(this.state.searchValue);
+    this.setState({ movieListFromAPI });
+  };
+
+  createMovieList = async (watchListMovies = []) => {
+    const searchList = this.state.movieListFromAPI;
     const updatedSearchList = searchList.map((movie) => {
       const movieyear = movie.release_date
         ? movie.release_date.substring(0, 4)
         : "";
-      return { ...movie, movieyear: movieyear };
+      const isInWatchList = false;
+      return { ...movie, movieyear: movieyear, isInWatchList: isInWatchList };
     });
-    const sortedList = _.orderBy(updatedSearchList, ["movieyear"], ["desc"]);
-    this.setState({ searchList: sortedList });
+
+    const orderedSearchList = this.orderMovieList(
+      updatedSearchList,
+      ["movieyear"],
+      ["desc"]
+    );
+
+    const movieListwithWatchList = this.combineList(
+      orderedSearchList,
+      watchListMovies
+    );
+    debugger;
+    this.setState({watchList:watchListMovies });
+    this.setState({ searchList: movieListwithWatchList });
+  };
+
+  orderMovieList = (movieList, orderArray, byArray) => {
+    const sortedList = _.orderBy(movieList, orderArray, byArray);
+    debugger;
+    return sortedList;
+  };
+
+  combineList = (updatedSearchList, watchListMovies) => {
+    debugger;
+    if (watchListMovies.length > 0) {
+      let newArray = updatedSearchList.map((element) => {
+        let movie = watchListMovies.filter((x) => x.id === element.id);
+        if (movie.length > 0) {
+          element.isInWatchList = true;
+        }
+        return element;
+      });
+      debugger;
+      return newArray;
+    } else {
+      return updatedSearchList;
+    }
   };
 
   handleChange = (event) => {
@@ -40,12 +94,12 @@ class MovieSearch extends Component {
           searchValue={this.state.searchValue}
         ></SearchBox>
         <hr className="my-4"></hr>
-        {this.props.movies.length>0 && 
-          <div className="movieCount d-flex justify-content-center align-items-center">
-            {this.props.movies.length}
-          </div>
-         
-        }
+        {this.props.watchListMovies &&
+          this.props.watchListMovies.length > 0 && (
+            <div className="movieCount d-flex justify-content-center align-items-center">
+              {this.props.watchListMovies.length}
+            </div>
+          )}
         <MovieList List={this.state.searchList}></MovieList>
       </>
     );
@@ -53,8 +107,9 @@ class MovieSearch extends Component {
 }
 
 const mapStateToProps = (state) => {
+  debugger;
   return {
-    movies: state.wishListMovies,
+    watchListMovies: state.wishListMovies,
   };
 };
 
